@@ -1,0 +1,8 @@
+---
+layout: post
+title: "New Blog!"
+date: 2012-02-28 11:59
+comments: false
+categories: Random
+---
+So it has been a while since I gave the whole blog thing a try and I was thinking now would be a good time to start writing blog posts again. So for now I have some configuration to do. Check back soon to see whats new.
