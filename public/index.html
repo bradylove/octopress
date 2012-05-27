@@ -216,6 +216,542 @@ For more control over the locations of the gradients you can add an array to gra
 
 
     <article class="post">
+    <h1 class="title"><a href="/blog/2012/03/04/refining-my-vim-better-rakefile/">Refining My Vim: Better Rakefile</a></h1>
+    <div class="entry">
+        <p>So tonight I am taking a closer look at my <a href="https://github.com/vim-files">Vim config</a> to see what I can change to help make my vim experience better. A few months ago I got away from using pre-configured setups of Vim (such as <a href="https://github.com/carlhuda/janus">janus</a>) and setup my own Vim config from scratch. I figured this would make a good blog series focusing on one thing at a time, so here we go.</p>
+
+<h2>Better Rakefile</h2>
+
+<p>One of the things I did when creating my own Vim configuration was created a Rakefile in my ~/.vim directory that makes my setup more mobile. My current rakefile basically has a list of plugins that I want installed, then checks if a folder already exists with a name matching the plugins name, if it doesn&#8217;t then it will download the plugin via git. There is some functionality missing from this that I would like to have, and there is some repetition that bothers me. Before we begin, here is what my current rakefile looks like.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/scrooloose/nerdtree.git&quot;</span><span class="p">,</span> <span class="s2">&quot;NERDTree&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/vim-scripts/The-NERD-Commenter.git&quot;</span><span class="p">,</span> <span class="s2">&quot;NERD-Commenter&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/vim-scripts/L9.git&quot;</span><span class="p">,</span> <span class="s2">&quot;L9&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/wincent/Command-T.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Command-T&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/mileszs/ack.vim.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Ack&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tpope/vim-rails.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Rails&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/vim-ruby/vim-ruby.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Ruby&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/mattn/gist-vim.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Gist&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/davidoc/taskpaper.vim.git&quot;</span><span class="p">,</span> <span class="s2">&quot;TaskPaper&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/vim-scripts/vimwiki.git&quot;</span><span class="p">,</span> <span class="s2">&quot;VimWiki&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tpope/vim-endwise.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Endwise&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/ervandew/supertab&quot;</span><span class="p">,</span> <span class="s2">&quot;SuperTab&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/lucapette/vim-ruby-doc.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Ruby-Doc&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/rbgrouleff/bclose.vim.git&quot;</span><span class="p">,</span> <span class="s2">&quot;BClose&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/bartekd/better-snipmate-snippets.git&quot;</span><span class="p">,</span> <span class="s2">&quot;betterSnipMate&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tpope/vim-surround&quot;</span><span class="p">,</span> <span class="s2">&quot;surround&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Syntax Files</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tpope/vim-markdown.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Markdown&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/leshill/vim-json.git&quot;</span><span class="p">,</span> <span class="s2">&quot;JSON&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tpope/vim-haml.git&quot;</span><span class="p">,</span> <span class="s2">&quot;HAML&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/kchmck/vim-coffee-script.git&quot;</span><span class="p">,</span> <span class="s2">&quot;CoffeeScript&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/pangloss/vim-javascript.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Javascript&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/vim-scripts/eruby.vim.git&quot;</span><span class="p">,</span> <span class="s2">&quot;eruby&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/groenewege/vim-less.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Less&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Colors</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/altercation/vim-colors-solarized.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Color-Solarized&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/squil/vim_colors.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Squil-Colors&quot;</span>
+</span><span class='line'>  <span class="nb">clone</span> <span class="s2">&quot;https://github.com/tomasr/molokai.git&quot;</span><span class="p">,</span> <span class="s2">&quot;Molokai&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s2">&quot;bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;[Exists] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;[Installing] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;git clone </span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;[Installed] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Lets identify the problems I have with this.</h3>
+
+<ul>
+<li>&#8220;clone&#8221; is getting called over and over, wouldn&#8217;t it be better if we could just have an object of the git repos and their names, then grab them as needed?</li>
+<li>I cannot list installed plugins.</li>
+<li>I cannot update a single plugin, in order to update a plugin I have to remove the folder that the plugin is installing into, and run the rake command.</li>
+<li>I cannot easily remove a single plugin using the rake command</li>
+</ul>
+
+
+<h3>Lets fix those problems</h3>
+
+<p>Lets start at the top and see what we can do to refactor this code to remove the repetition. The simplest thing I can think of is to create a method called plugins that returns a hash with the plugin name as a key and the git url as its value. So we end up with something like this. (Shortened for times sake)</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plugins</span>
+</span><span class='line'>  <span class="p">{</span> <span class="s2">&quot;NERDTree&quot;</span>       <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/scrooloose/nerdtree.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;NERD-Commenter&quot;</span>  <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/The-NERD-Commenter.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;L9&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/L9.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;Ack&quot;</span>          <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/mileszs/ack.vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;Rails&quot;</span>          <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-rails.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;Ruby&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-ruby/vim-ruby.git&quot;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Syntax Plugins</span>
+</span><span class='line'>  <span class="s2">&quot;Markdown&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-markdown.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;JSON&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/leshill/vim-json.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;HAML&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-haml.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1"># Colors</span>
+</span><span class='line'>  <span class="s2">&quot;Solarized&quot;</span>      <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/altercation/vim-colors-solarized.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;Squil-Colors&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/squil/vim_colors.git&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;Molokai&quot;</span>      <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tomasr/molokai.git&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to make use of this new hash method we will need to update our default rake task like so.</p>
+
+<figure class='code'><figcaption><span>rake</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">plugins</span><span class="o">.</span><span class="n">each_pair</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="nb">clone</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To me this is much more pleasing for a couple reasons, one reason being I am not repeatedly calling having to type clone, can just add the name and url of the plugin to the hash. Secondly and more importantly is the fact that the plugins method is reusable to fix my other issues.</p>
+
+<h3>One down three to go</h3>
+
+<p>So another feature I want in my rakefile is the ability to call <code>rake list</code> and getting a list of installed plugins. This is really easy to do, we are going to create 2 methods, the rake task and then a method to get a list of installed apps. First we will make the method that gets the list for us.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">installed_plugins</span>
+</span><span class='line'>  <span class="no">Dir</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="s2">&quot;bundle&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is a very simple method that just gets a list of of files/directories in the &#8220;bundle&#8221; directory. However when you use <code>Dir.foreach()</code> it also returns 2 unnecessary entries, &#8220;.&#8221; and &#8220;..&#8221;. Luckily they are at the top of the list so we easily get rid of them with <code>.drop(2)</code>. We now have our list so lets put it to use and create our rake task.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:list</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Plugins installed in ~/.vim/bundle&quot;</span>
+</span><span class='line'>  <span class="n">installed_plugins</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">plugin</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">plugin</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can now use this rake task by running <code>rake list</code> in terminal.</p>
+
+<h3>Halfway there</h3>
+
+<p>We have two problems out of the way and now we are going to tackle updating single plugins. Before we do that we need to consider how we want to handle updating. Do we want to check the git repository and see if there are updates? Or do we want to just delete the directory and re-install the plugin? I personally do not store any configuration in my plugin folders, so I have no issues with taking the easy route and just deleting the directory and re-installing the plugin, however if this is not the case for you, you might want to find a better way to handle this.</p>
+
+<p>Before we try and delete the existing copy of the plugin we want to make sure it exists with this simple method.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">installed_plugins</span><span class="o">.</span><span class="n">include?</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Plugin not found in bundle direcotry&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We also want to make sure that plugin is in our list of plugins before we delete the local copy. We can easily do that by checking our hash that we created earlier includes the name of the plugin.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">plugin_in_plugins?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugins</span><span class="o">.</span><span class="n">include?</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Plugin not in hash of plugins&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once we have verified that the plugin exists in our hash and locally in the &#8220;bundle&#8221; directory we can remove it.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">delete_plugin</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Removing] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="no">FileUtils</span><span class="o">.</span><span class="n">rm_rf</span><span class="p">(</span><span class="s2">&quot;bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Removed] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We will then use our existing clone method to re-install the plugin. With all our building blocks in place we will now put them together in a update method to handle the logic of verifying that we can in fact update the plugin and then execute the methods to update it.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">plugin_in_plugins?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">delete_plugin</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">clone</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">plugins</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally we need to create the rake task to put all this code to use!</p>
+
+<figure class='code'><figcaption><span>rakefile </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:update</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">update</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This rake task will accept an argument for the name of the plugin and can be used by running <code>rake update[pluginName]</code> in terminal. (If you are using Zsh you will need to add \ in front of the square brackets like <code>rake update\[pluginName\]</code>)</p>
+
+<h3>Last but not least</h3>
+
+<p>The last item on my wish list is to be able to be able to remove a plugin by running <code>rake destroy[pluginName]</code>. Luckily by trying to make our methods as reusable as possible we already developed the &#8220;delete_plugin&#8221; method and just need to add the rake task.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:destroy</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">delete_plugin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After running <code>rake destroy[pluginName]</code> of course we will need to open up our rakefile and remove the plugin from our hash.</p>
+
+<h3>Wrap up</h3>
+
+<p>After we have gone through all the steps here is what we end up with.</p>
+
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">plugins</span><span class="o">.</span><span class="n">each_pair</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="nb">clone</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="ss">:list</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Plugins installed in ~/.vim/bundle&quot;</span>
+</span><span class='line'>  <span class="n">installed_plugins</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">plugin</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">plugin</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="ss">:update</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">update</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="ss">:destroy</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">delete_plugin</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">plugins</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;NERDTree&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/scrooloose/nerdtree.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;NERD-Commenter&quot;</span>  <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/The-NERD-Commenter.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;L9&quot;</span>              <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/L9.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Ack&quot;</span>             <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/mileszs/ack.vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Rails&quot;</span>           <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-rails.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Ruby&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-ruby/vim-ruby.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Gist&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/mattn/gist-vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;TaskPaper&quot;</span>       <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/davidoc/taskpaper.vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;VimWiki&quot;</span>         <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/vimwiki.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Endwise&quot;</span>         <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-endwise.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;SuperTab&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/ervandew/supertab&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Ruby-Doc&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/lucapette/vim-ruby-doc.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;BClose&quot;</span>          <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/rbgrouleff/bclose.vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;BetterSnipMate&quot;</span>  <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/bartekd/better-snipmate-snippets.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Surround&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-surround&quot;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1"># Syntax Plugins</span>
+</span><span class='line'>    <span class="s2">&quot;Markdown&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-markdown.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;JSON&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/leshill/vim-json.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;HAML&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-haml.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;CoffeeScript&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/kchmck/vim-coffee-script.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Javascript&quot;</span>      <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/pangloss/vim-javascript.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Eruby&quot;</span>           <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/vim-scripts/eruby.vim.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Less&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/groenewege/vim-less.git&quot;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1"># Colors</span>
+</span><span class='line'>    <span class="s2">&quot;Solarized&quot;</span>       <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/altercation/vim-colors-solarized.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Squil-Colors&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/squil/vim_colors.git&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;Molokai&quot;</span>         <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tomasr/molokai.git&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="s2">&quot;bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Exists] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Installing] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;git clone </span><span class="si">#{</span><span class="n">url</span><span class="si">}</span><span class="s2"> bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Installed] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">plugin_in_plugins?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">delete_plugin</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">clone</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">plugins</span><span class="o">.</span><span class="n">values_at</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">installed_plugins</span>
+</span><span class='line'>  <span class="no">Dir</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="s2">&quot;bundle&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">installed_plugins</span><span class="o">.</span><span class="n">include?</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Plugin not found in bundle direcotry&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">plugin_in_plugins?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugins</span><span class="o">.</span><span class="n">include?</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;Plugin not in hash of plugins&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">delete_plugin</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">plugin_installed?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Removing] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="no">FileUtils</span><span class="o">.</span><span class="n">rm_rf</span><span class="p">(</span><span class="s2">&quot;bundle/</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s2">&quot;[Removed] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is a lot you can do with a rake file to help make your Vim setup easier to add and remove to. You don&#8217;t have to limit rake files to your Ruby apps or Vim setups either, there are many problems where a nice rake file is a viable solution.</p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T18:30:00-08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/vim/'>vim</a>
+  
+</div>
+
+</div>
+        
+    </div>
+</article>
+
+
+    <article class="post">
     <h1 class="title"><a href="/blog/2012/02/28/new-blog/">New Blog!</a></h1>
     <div class="entry">
         <p>So it has been a while since I gave the whole blog thing a try and I was thinking now would be a good time to start writing blog posts again. So for now I have some configuration to do. Check back soon to see whats new.</p>
