@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Random | Brady Love]]></title>
+  <link href="http://bradylove.heroku.com/blog/categories/random/atom.xml" rel="self"/>
+  <link href="http://bradylove.heroku.com/"/>
+  <updated>2012-05-27T15:15:31-07:00</updated>
+  <id>http://bradylove.heroku.com/</id>
+  <author>
+    <name><![CDATA[Brady Love]]></name>
+    <email><![CDATA[love.brady@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[New Blog!]]></title>
+    <link href="http://bradylove.heroku.com/blog/2012/02/28/new-blog/"/>
+    <updated>2012-02-28T11:59:00-08:00</updated>
+    <id>http://bradylove.heroku.com/blog/2012/02/28/new-blog</id>
+    <content type="html"><![CDATA[<p>So it has been a while since I gave the whole blog thing a try and I was thinking now would be a good time to start writing blog posts again. So for now I have some configuration to do. Check back soon to see whats new.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby Motion | Brady Love]]></title>
+  <link href="http://bradylove.heroku.com/blog/categories/ruby-motion/atom.xml" rel="self"/>
+  <link href="http://bradylove.heroku.com/"/>
+  <updated>2012-05-27T15:15:31-07:00</updated>
+  <id>http://bradylove.heroku.com/</id>
+  <author>
+    <name><![CDATA[Brady Love]]></name>
+    <email><![CDATA[love.brady@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Create Gradients With Ease In Ruby Motion]]></title>
+    <link href="http://bradylove.heroku.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion/"/>
+    <updated>2012-05-27T13:01:00-07:00</updated>
+    <id>http://bradylove.heroku.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion</id>
+    <content type="html"><![CDATA[<p>Lately I have been messing around with Ruby Motion and have been learning alot about the way things are done in iOS. Along the way there have been many things I wanted to do but had no clue how (Having very little expirience with Objective-C). One of the things I wanted to figure out how to do was to create gradients programatically so I would not have to images. After about 3 hours of trying to figure it out and failing miserably I gave up and used images anyway. But the next day it suddenly hit me and I was able to figure it out and it was alot easier then what I was trying to do the night before. So I figured someone else might find this useful.</p>
+
+<p>In the first part of this example I am going to show you how add a gradient background on a UIView. So first thing we need to do is create our Ruby Motion project and setup our view controller.</p>
+
+<p><code>
+motion create GradientExample
+cd GradientExample
+</code></p>
+
+<p>Then open up the Rakefile created by the generator and add the QuartzCore framework.</p>
+
+<p>```ruby Rakefile
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project'</p>
+
+<p>Motion::Project::App.setup do |app|
+  # Use `rake config' to see complete project settings.
+  app.name = 'EasyGradients'
+  app.frameworks &lt;&lt; "QuartzCore"
+end
+```</p>
+
+<p>Next we will create our UIWindow and add a view controller to it. So open up your app_delegate.rb and make it look like this.</p>
+
+<p>```ruby app/app_delegate.rb
+class AppDelegate
+  def application(application, didFinishLaunchingWithOptions:launchOptions)</p>
+
+<pre><code>@window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+@window.rootViewController = GradientViewController.new
+@window.rootViewController.wantsFullScreenLayout = true
+@window.makeKeyAndVisible
+
+true
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Then create the file for our GradientViewController.</p>
+
+<p><code>sh
+touch app/gradient_view_controller.rb
+</code></p>
+
+<p>Open up the gradient_view_controller.rb. This is were we are going to work our gradient magic.</p>
+
+<p>```ruby app/gradient_view_controller.rb
+class GradientViewController &lt; UIViewController
+  def viewDidLoad</p>
+
+<pre><code>gradient = CAGradientLayer.layer
+gradient.frame = view.bounds
+gradient.colors = [UIColor.blackColor.CGColor, UIColor.whiteColor.CGColor]
+
+view.layer.addSublayer(gradient)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Then back in your console you can go ahead and run the <code>rake</code> command to launch the app in the iOS Simulator and should have something like this.</p>
+
+<p><img src="https://img.skitch.com/20120527-gk3926patwmn7b9q42ebjs7ts8.jpg" alt="image" /></p>
+
+<p>If may notice that gradient.colors just accepts an array so we can easily add more colors to the array.
+```ruby app/gradient_view_controller.rb
+gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor,</p>
+
+<pre><code>               UIColor.whiteColor.CGColor, UIColor.blueColor.CGColor]
+</code></pre>
+
+<p>```
+And you will end up with this</p>
+
+<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="image" />
+For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.
+<code>ruby app/gradient_view_controller.rb
+gradient.locations = [0.1, 0.2, 0.8, 0.9]
+</code>
+Which will end up someting like this</p>
+
+<p><img src="https://img.skitch.com/20120527-p3si97dy86x9bskaxsad8eea8s.jpg" alt="" /></p>
+
+<p>Well thats about it, you can easily use these gradients for backgrounds for almost all UI objects. Hope this helps someone that is as lost as me. There are some more iOS/Ruby Motion tricks I have been learning so check back soon on write ups for them.</p>
+]]></content>
+  </entry>
+  
+</feed>
