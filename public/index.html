@@ -7,7 +7,7 @@
     <meta name="author" content="Brady Love">
 
     
-    <meta name="description" content="New Blog! So it has been a while since I gave the whole blog thing a try and I was thinking now would be a good time to start writing blog posts &hellip;">
+    <meta name="description" content="Create Gradients With Ease in Ruby Motion Lately I have been messing around with Ruby Motion and have been learning alot about the way things are &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -64,6 +64,155 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion/">Create Gradients With Ease in Ruby Motion</a></h1>
+    <div class="entry">
+        <p>Lately I have been messing around with Ruby Motion and have been learning alot about the way things are done in iOS. Along the way there have been many things I wanted to do but had no clue how (Having very little expirience with Objective-C). One of the things I wanted to figure out how to do was to create gradients programatically so I would not have to images. After about 3 hours of trying to figure it out and failing miserably I gave up and used images anyway. But the next day it suddenly hit me and I was able to figure it out and it was alot easier then what I was trying to do the night before. So I figured someone else might find this useful.</p>
+
+<p>In the first part of this example I am going to show you how add a gradient background on a UIView. So first thing we need to do is create our Ruby Motion project and setup our view controller.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>motion create GradientExample
+</span><span class='line'>cd GradientExample</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then open up the Rakefile created by the generator and add the QuartzCore framework.</p>
+
+<figure class='code'><figcaption><span>Rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>  <span class="c1"># Use `rake config&#39; to see complete project settings.</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;EasyGradients&#39;</span>
+</span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;QuartzCore&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next we will create our UIWindow and add a view controller to it. So open up your app_delegate.rb and make it look like this.</p>
+
+<figure class='code'><figcaption><span>app/app_delegate.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="no">GradientViewController</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>    <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span><span class="o">.</span><span class="n">wantsFullScreenLayout</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="vi">@window</span><span class="o">.</span><span class="n">makeKeyAndVisible</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kp">true</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then create the file for our GradientViewController.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>touch app/gradient_view_controller.rb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Open up the gradient_view_controller.rb. This is were we are going to work our gradient magic.</p>
+
+<figure class='code'><figcaption><span>app/gradient_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">GradientViewController</span> <span class="o">&lt;</span> <span class="no">UIViewController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+</span><span class='line'>    <span class="n">gradient</span> <span class="o">=</span> <span class="no">CAGradientLayer</span><span class="o">.</span><span class="n">layer</span>
+</span><span class='line'>    <span class="n">gradient</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">bounds</span>
+</span><span class='line'>    <span class="n">gradient</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="o">[</span><span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span><span class="o">.</span><span class="n">CGColor</span><span class="p">,</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">whiteColor</span><span class="o">.</span><span class="n">CGColor</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">view</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">addSublayer</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then back in your console you can go ahead and run the <code>rake</code> command to launch the app in the iOS Simulator and should have something like this.</p>
+
+<p><img src="https://img.skitch.com/20120527-gk3926patwmn7b9q42ebjs7ts8.jpg" alt="image" /></p>
+
+<p>If may notice that gradient.colors just accepts an array so we can easily add more colors to the array.</p>
+
+<figure class='code'><figcaption><span>app/gradient_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gradient</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="o">[</span><span class="no">UIColor</span><span class="o">.</span><span class="n">blackColor</span><span class="o">.</span><span class="n">CGColor</span><span class="p">,</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">redColor</span><span class="o">.</span><span class="n">CGColor</span><span class="p">,</span>
+</span><span class='line'>                   <span class="no">UIColor</span><span class="o">.</span><span class="n">whiteColor</span><span class="o">.</span><span class="n">CGColor</span><span class="p">,</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blueColor</span><span class="o">.</span><span class="n">CGColor</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And you will end up with this</p>
+
+<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="image" />
+For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.</p>
+
+<figure class='code'><figcaption><span>app/gradient_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gradient</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">9</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will end up someting like this</p>
+
+<p><img src="https://img.skitch.com/20120527-p3si97dy86x9bskaxsad8eea8s.jpg" alt="" /></p>
+
+<p>Well thats about it, you can easily use these gradients for backgrounds for almost all UI objects. Hope this helps someone that is as lost as me. There are some more iOS/Ruby Motion tricks I have been learning so check back soon on write ups for them.</p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-27T13:01:00-07:00" pubdate data-updated="true">May 27<span>th</span>, 2012</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>, <a class='category' href='/blog/categories/ruby-motion/'>Ruby Motion</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</div>
+
+</div>
+        
+    </div>
+</article>
 
 
     <article class="post">
