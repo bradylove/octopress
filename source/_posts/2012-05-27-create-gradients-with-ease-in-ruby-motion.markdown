@@ -66,7 +66,7 @@ Then back in your console you can go ahead and run the `rake` command to launch 
 
 ![](https://img.skitch.com/20120527-gk3926patwmn7b9q42ebjs7ts8.jpg)
 
-If may notice that gradient.colors just accepts an array so we can easily add more colors to the array.
+You may notice that gradient.colors just accepts an array so we can easily add more colors to the array.
 ```ruby app/gradient_view_controller.rb
 gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor, 
                    UIColor.whiteColor.CGColor, UIColor.blueColor.CGColor]
