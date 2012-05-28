@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Brady Love]]></title>
-  <link href="http://bradylove.heroku.com/atom.xml" rel="self"/>
-  <link href="http://bradylove.heroku.com/"/>
-  <updated>2012-05-27T19:36:21-07:00</updated>
-  <id>http://bradylove.heroku.com/</id>
+  <link href="http://bradylove.com/atom.xml" rel="self"/>
+  <link href="http://bradylove.com/"/>
+  <updated>2012-05-28T01:14:36-07:00</updated>
+  <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
     <email><![CDATA[love.brady@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Create Gradients With Ease In Ruby Motion]]></title>
-    <link href="http://bradylove.heroku.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion/"/>
+    <link href="http://bradylove.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion/"/>
     <updated>2012-05-27T13:01:00-07:00</updated>
-    <id>http://bradylove.heroku.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion</id>
+    <id>http://bradylove.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion</id>
     <content type="html"><![CDATA[<p>Lately I have been messing around with Ruby Motion and have been learning alot about the way things are done in iOS. Along the way there have been many things I wanted to do but had no clue how (Having very little expirience with Objective-C). One of the things I wanted to figure out how to do was to create gradients programatically so I would not have to images. After about 3 hours of trying to figure it out and failing miserably I gave up and used images anyway. But the next day it suddenly hit me and I was able to figure it out and it was alot easier then what I was trying to do the night before. So I figured someone else might find this useful.</p>
 
 <p>In the first part of this example I am going to show you how add a gradient background on a UIView. So first thing we need to do is create our Ruby Motion project and setup our view controller.</p>
@@ -137,9 +137,9 @@ For more control over the locations of the gradients you can add an array to gra
   
   <entry>
     <title type="html"><![CDATA[Refining My Vim: Better Rakefile]]></title>
-    <link href="http://bradylove.heroku.com/blog/2012/03/04/refining-my-vim-better-rakefile/"/>
+    <link href="http://bradylove.com/blog/2012/03/04/refining-my-vim-better-rakefile/"/>
     <updated>2012-03-04T18:30:00-08:00</updated>
-    <id>http://bradylove.heroku.com/blog/2012/03/04/refining-my-vim-better-rakefile</id>
+    <id>http://bradylove.com/blog/2012/03/04/refining-my-vim-better-rakefile</id>
     <content type="html"><![CDATA[<p>So tonight I am taking a closer look at my <a href="https://github.com/vim-files">Vim config</a> to see what I can change to help make my vim experience better. A few months ago I got away from using pre-configured setups of Vim (such as <a href="https://github.com/carlhuda/janus">janus</a>) and setup my own Vim config from scratch. I figured this would make a good blog series focusing on one thing at a time, so here we go.</p>
 
 <h2>Better Rakefile</h2>
@@ -646,9 +646,9 @@ For more control over the locations of the gradients you can add an array to gra
   
   <entry>
     <title type="html"><![CDATA[New Blog!]]></title>
-    <link href="http://bradylove.heroku.com/blog/2012/02/28/new-blog/"/>
+    <link href="http://bradylove.com/blog/2012/02/28/new-blog/"/>
     <updated>2012-02-28T11:59:00-08:00</updated>
-    <id>http://bradylove.heroku.com/blog/2012/02/28/new-blog</id>
+    <id>http://bradylove.com/blog/2012/02/28/new-blog</id>
     <content type="html"><![CDATA[<p>So it has been a while since I gave the whole blog thing a try and I was thinking now would be a good time to start writing blog posts again. So for now I have some configuration to do. Check back soon to see whats new.</p>
 ]]></content>
   </entry>

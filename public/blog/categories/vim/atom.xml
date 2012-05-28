@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: vim | Brady Love]]></title>
-  <link href="http://bradylove.heroku.com/blog/categories/vim/atom.xml" rel="self"/>
-  <link href="http://bradylove.heroku.com/"/>
-  <updated>2012-05-27T19:36:21-07:00</updated>
-  <id>http://bradylove.heroku.com/</id>
+  <link href="http://bradylove.com/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://bradylove.com/"/>
+  <updated>2012-05-28T01:14:36-07:00</updated>
+  <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
     <email><![CDATA[love.brady@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Refining My Vim: Better Rakefile]]></title>
-    <link href="http://bradylove.heroku.com/blog/2012/03/04/refining-my-vim-better-rakefile/"/>
+    <link href="http://bradylove.com/blog/2012/03/04/refining-my-vim-better-rakefile/"/>
     <updated>2012-03-04T18:30:00-08:00</updated>
-    <id>http://bradylove.heroku.com/blog/2012/03/04/refining-my-vim-better-rakefile</id>
+    <id>http://bradylove.com/blog/2012/03/04/refining-my-vim-better-rakefile</id>
     <content type="html"><![CDATA[<p>So tonight I am taking a closer look at my <a href="https://github.com/vim-files">Vim config</a> to see what I can change to help make my vim experience better. A few months ago I got away from using pre-configured setups of Vim (such as <a href="https://github.com/carlhuda/janus">janus</a>) and setup my own Vim config from scratch. I figured this would make a good blog series focusing on one thing at a time, so here we go.</p>
 
 <h2>Better Rakefile</h2>
