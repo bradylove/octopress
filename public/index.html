@@ -19,6 +19,18 @@
     <script src="/javascripts/jquery.min.js"></script>
     
     
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-23704883-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -157,7 +169,7 @@
 
 <p>Then back in your console you can go ahead and run the <code>rake</code> command to launch the app in the iOS Simulator and should have something like this.</p>
 
-<p><img src="https://img.skitch.com/20120527-gk3926patwmn7b9q42ebjs7ts8.jpg" alt="image" /></p>
+<p><img src="https://img.skitch.com/20120527-gk3926patwmn7b9q42ebjs7ts8.jpg" alt="" /></p>
 
 <p>If may notice that gradient.colors just accepts an array so we can easily add more colors to the array.</p>
 
@@ -170,7 +182,7 @@
 
 <p>And you will end up with this</p>
 
-<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="image" />
+<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="" />
 For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.</p>
 
 <figure class='code'><figcaption><span>app/gradient_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
