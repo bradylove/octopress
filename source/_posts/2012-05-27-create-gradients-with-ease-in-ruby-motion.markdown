@@ -74,6 +74,7 @@ gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor,
 And you will end up with this
 
 ![](https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg)
+
 For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.
 ```ruby app/gradient_view_controller.rb
 gradient.locations = [0.1, 0.2, 0.8, 0.9]

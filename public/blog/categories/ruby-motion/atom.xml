@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby Motion | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/ruby-motion/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2012-05-28T01:14:36-07:00</updated>
+  <updated>2012-05-28T10:40:24-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -95,8 +95,9 @@ gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor,</p>
 <p>```
 And you will end up with this</p>
 
-<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="" />
-For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.
+<p><img src="https://img.skitch.com/20120527-dwuxbbhnyrewgne2m7wpk7sdmq.jpg" alt="" /></p>
+
+<p>For more control over the locations of the gradients you can add an array to gradient locations with a Float making their location. 0 being top 1 being bottom.
 <code>ruby app/gradient_view_controller.rb
 gradient.locations = [0.1, 0.2, 0.8, 0.9]
 </code>
