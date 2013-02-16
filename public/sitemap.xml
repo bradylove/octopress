@@ -2,26 +2,32 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://bradylove.com/blog/2012/02/28/new-blog/</loc>
-        <lastmod>2012-05-27T12:55:05-07:00</lastmod>
+        <lastmod>2013-02-15T22:17:09-08:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/blog/2012/03/04/refining-my-vim-better-rakefile/</loc>
-        <lastmod>2012-05-27T15:10:58-07:00</lastmod>
+        <lastmod>2013-02-15T22:17:09-08:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/blog/2012/05/27/create-gradients-with-ease-in-ruby-motion/</loc>
-        <lastmod>2012-05-28T11:16:29-07:00</lastmod>
+        <lastmod>2013-02-15T22:17:09-08:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/blog/2012/06/04/rounded-corners-with-ruby-motion/</loc>
-        <lastmod>2012-06-04T22:19:44-07:00</lastmod>
+        <lastmod>2013-02-15T22:17:09-08:00</lastmod>
     </url>
     <url>
-        <loc>http://bradylove.com/blog/archives/</loc>
-        <lastmod>2012-06-04T22:19:44-07:00</lastmod>
+        <loc>
+            http://bradylove.com/blog/2013/02/15/dead-simple-time-based-otp-with-google-authenticator/
+        </loc>
+        <lastmod>2013-02-15T23:28:46-08:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/</loc>
-        <lastmod>2012-06-04T22:19:44-07:00</lastmod>
+        <lastmod>2013-02-15T23:28:46-08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://bradylove.com/blog/archives/</loc>
+        <lastmod>2013-02-15T23:28:46-08:00</lastmod>
     </url>
 </urlset>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: QRCode | Brady Love]]></title>
+  <link href="http://bradylove.com/blog/categories/qrcode/atom.xml" rel="self"/>
+  <link href="http://bradylove.com/"/>
+  <updated>2013-02-15T23:29:14-08:00</updated>
+  <id>http://bradylove.com/</id>
+  <author>
+    <name><![CDATA[Brady Love]]></name>
+    <email><![CDATA[love.brady@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Dead Simple Time Based OTP With Google Authenticator]]></title>
+    <link href="http://bradylove.com/blog/2013/02/15/dead-simple-time-based-otp-with-google-authenticator/"/>
+    <updated>2013-02-15T22:37:00-08:00</updated>
+    <id>http://bradylove.com/blog/2013/02/15/dead-simple-time-based-otp-with-google-authenticator</id>
+    <content type="html"><![CDATA[<p>If you have ever been curious on how to add two factor authentication to your Rails/Sinatra app then today I will feed your curiosity. I am just going to show you the basics of creating a TOTP (Time based OTP) token, and creating a QRCode based on that token that can be used to add the token to your Google Authenticator on your favorite smart phone.</p>
+
+<h2>Requirements</h2>
+
+<p>To be able to do this with the method I am showing here you will need to have Ruby, I tested this with Ruby 1.9.3-p385. You will also need to have libqrencode installed on your system. To do this visit <a href="http://fukuchi.org/works/qrencode/index.html.en">http://fukuchi.org/works/qrencode/index.html.en</a> and download qrencode-3.4.1.tar.gz. I installed the library on Linux Mint 14 with the following instructions. This process may vary for your OS but these should work for most people.</p>
+
+<pre><code>$ tar xzvf qrencode-3.4.1.tar.gz
+$ cd qrencode-3.4.1
+$ ./configure
+$ make
+$ sudo make install
+</code></pre>
+
+<p>Next you will need to grab a couple gems, these gems are awesome and make this process very painless. While we are at it we will also create <code>totp.rb</code> so we have somewhere to put our code.</p>
+
+<pre><code>$ gem install rotp qrencoder
+$ touch totp.rb
+</code></pre>
+
+<p>Then open <code>totp.rb</code> in your favourite text editor and enter in the following code. Once you have done that we will go through it and explain what each bit does.</p>
+
+<p>``` ruby totp.rb</p>
+
+<pre><code>require 'rotp'
+require 'qrencoder'
+
+random = ROTP::Base32.random_base32
+totp   = ROTP::TOTP.new(random)
+
+qr_string = totp.provisioning_uri("bradylove.com-love.brady@gmail.com")
+qr_code   = QREncoder.encode(qr_string)
+qr_code.png(pixels_per_module: 4, margin: 1).save("qr_code.png")
+
+loop do
+  printf("What is your most excelent OTP? ")
+
+  otp = gets.chop
+  puts totp.verify_with_drift(otp, 5)
+end
+</code></pre>
+
+<p>```</p>
+
+<p>Now that you have entered that in lets go through it. The first two lines require the <code>rotp</code> and <code>qrencoder</code> gems.</p>
+
+<p>``` ruby</p>
+
+<pre><code>require 'rotp'
+require 'qrencoder'
+</code></pre>
+
+<p>```</p>
+
+<p>The next creates a 16 character base32 encoded random string. The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.</p>
+
+<p>``` ruby</p>
+
+<pre><code>random = ROTP::Base32.random_base32
+totp   = ROTP::TOTP.new(random)
+</code></pre>
+
+<p>```</p>
+
+<p>Next we use our TOTP object to create the URI with an <code>otpauth://</code> schema which ends up looking something like <code>otpauth://totp/bradylove.com-love.brady@gmail.com?secret=JBSWY3DPEHPK3PXP</code>, the <code>bradylove.com-love.brady@gmail.com</code> parameter we are passing it is just an identifier that will be displayed on the Google Authenticator as a label for the OTP.</p>
+
+<p>``` ruby</p>
+
+<pre><code>qr_string = totp.provisioning_uri("bradylove.com-love.brady@gmail.com")
+</code></pre>
+
+<p>```</p>
+
+<p>Once we have that string we want to use it to create a QRCode. The QREncoder gem gives you plenty of options choices of ways to create the QRCode for this example we just go ahead and save it as a PNG image on the local directory.</p>
+
+<p>``` ruby</p>
+
+<pre><code>qr_code   = QREncoder.encode(qr_string)
+qr_code.png(pixels_per_module: 4, margin: 1).save("qr_code.png")
+</code></pre>
+
+<p>```</p>
+
+<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/- 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
+
+<p>``` ruby</p>
+
+<pre><code>loop do
+  printf("What is your most excelent OTP? ")
+
+  otp = gets.chop
+  puts totp.verify_with_drift(otp, 5)
+end
+</code></pre>
+
+<p>```</p>
+
+<p>So now that we have that all covered lets go ahead and test it. If you followed the code in this example, when we execute this script it will create a QRCode and save it to <code>qr_code.png</code> in the current directory. You can then open that image in your file browser, and scan it with your Google Authenticator, Google Authenticator will then display a new OTP every 30 seconds, check it out!</p>
+
+<pre><code>$ ruby totp.rb
+What is your most excelent OTP? 707918
+true
+What is your most excelent OTP? 707918
+true
+What is your most excelent OTP? 707918
+false
+What is your most excelent OTP? 773428
+true
+</code></pre>
+
+<p>When you are done having OTP fun you can hit Ctrl-c to kill the process. This example is also available on my GitHub at <a href="https://github.com/bradylove/blog-totp">https://github.com/bradylove/blog-totp</a>. Now get back to work and smile!</p>
+]]></content>
+  </entry>
+  
+</feed>
