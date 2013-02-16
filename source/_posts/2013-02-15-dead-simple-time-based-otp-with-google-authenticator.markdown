@@ -51,7 +51,7 @@ Now that you have entered that in lets go through it. The first two lines requir
     require 'qrencoder'
 ```
 
-The next creates a 16 character base32 encoded random string. The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.
+The next creates a 16 character base32 encoded random string (If you are using this with a Rails or Sinatra app you will want to save this random seed in your database associated with the user, and it would also be a good idea to encrypt it, maybe that will be another blog post soon). The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.
 
 ``` ruby
     random = ROTP::Base32.random_base32

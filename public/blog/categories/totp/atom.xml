@@ -4,7 +4,7 @@
   <title><![CDATA[Category: TOTP | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/totp/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-02-15T23:36:22-08:00</updated>
+  <updated>2013-02-15T23:49:29-08:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -75,7 +75,7 @@ require 'qrencoder'
 
 <p>```</p>
 
-<p>The next creates a 16 character base32 encoded random string. The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.</p>
+<p>The next creates a 16 character base32 encoded random string (If you are using this with a Rails or Sinatra app you will want to save this random seed in your database associated with the user, and it would also be a good idea to encrypt it, maybe that will be another blog post soon). The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.</p>
 
 <p>``` ruby</p>
 

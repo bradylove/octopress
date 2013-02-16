@@ -150,7 +150,7 @@ $ touch totp.rb
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The next creates a 16 character base32 encoded random string. The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.</p>
+<p>The next creates a 16 character base32 encoded random string (If you are using this with a Rails or Sinatra app you will want to save this random seed in your database associated with the user, and it would also be a good idea to encrypt it, maybe that will be another blog post soon). The next line creates our TOTP object which will handle the algorithms for creating and verifying the OTP.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
