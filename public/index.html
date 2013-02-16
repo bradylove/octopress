@@ -100,6 +100,8 @@ $ sudo make install
 $ touch totp.rb
 </code></pre>
 
+<h2>On with the code!</h2>
+
 <p>Then open <code>totp.rb</code> in your favourite text editor and enter in the following code. Once you have done that we will go through it and explain what each bit does.</p>
 
 <figure class='code'><figcaption><span>totp.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -136,6 +138,8 @@ $ touch totp.rb
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>Break it down</h2>
 
 <p>Now that you have entered that in lets go through it. The first two lines require the <code>rotp</code> and <code>qrencoder</code> gems.</p>
 
@@ -187,6 +191,8 @@ $ touch totp.rb
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>Run it</h2>
 
 <p>So now that we have that all covered lets go ahead and test it. If you followed the code in this example, when we execute this script it will create a QRCode and save it to <code>qr_code.png</code> in the current directory. You can then open that image in your file browser, and scan it with your Google Authenticator, Google Authenticator will then display a new OTP every 30 seconds, check it out!</p>
 

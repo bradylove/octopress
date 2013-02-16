@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Authenticator | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/authenticator/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-02-15T23:29:14-08:00</updated>
+  <updated>2013-02-15T23:36:22-08:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -37,6 +37,8 @@ $ sudo make install
 $ touch totp.rb
 </code></pre>
 
+<h2>On with the code!</h2>
+
 <p>Then open <code>totp.rb</code> in your favourite text editor and enter in the following code. Once you have done that we will go through it and explain what each bit does.</p>
 
 <p>``` ruby totp.rb</p>
@@ -60,6 +62,8 @@ end
 </code></pre>
 
 <p>```</p>
+
+<h2>Break it down</h2>
 
 <p>Now that you have entered that in lets go through it. The first two lines require the <code>rotp</code> and <code>qrencoder</code> gems.</p>
 
@@ -113,6 +117,8 @@ end
 </code></pre>
 
 <p>```</p>
+
+<h2>Run it</h2>
 
 <p>So now that we have that all covered lets go ahead and test it. If you followed the code in this example, when we execute this script it will create a QRCode and save it to <code>qr_code.png</code> in the current directory. You can then open that image in your file browser, and scan it with your Google Authenticator, Google Authenticator will then display a new OTP every 30 seconds, check it out!</p>
 

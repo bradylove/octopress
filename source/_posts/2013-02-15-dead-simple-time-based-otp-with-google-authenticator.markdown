@@ -21,6 +21,7 @@ Next you will need to grab a couple gems, these gems are awesome and make this p
     $ gem install rotp qrencoder
     $ touch totp.rb
 
+## On with the code!
 Then open `totp.rb` in your favourite text editor and enter in the following code. Once you have done that we will go through it and explain what each bit does.
 
 ``` ruby totp.rb
@@ -42,6 +43,7 @@ Then open `totp.rb` in your favourite text editor and enter in the following cod
     end
 ```
 
+## Break it down
 Now that you have entered that in lets go through it. The first two lines require the `rotp` and `qrencoder` gems.
 
 ``` ruby
@@ -80,6 +82,7 @@ Finally to test the lines of code above we create an endless loop that will ask 
     end
 ```
 
+## Run it
 So now that we have that all covered lets go ahead and test it. If you followed the code in this example, when we execute this script it will create a QRCode and save it to `qr_code.png` in the current directory. You can then open that image in your file browser, and scan it with your Google Authenticator, Google Authenticator will then display a new OTP every 30 seconds, check it out!
 
     $ ruby totp.rb
