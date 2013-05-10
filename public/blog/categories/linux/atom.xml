@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-05-09T20:45:00-07:00</updated>
+  <updated>2013-05-09T21:25:44-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -30,24 +30,26 @@
 
 <p>What I did to fix this problem was described an Elisp function to send a command to spotify via <code>dbus-send</code>, then created functions for toggling play/pause, previous, and next. Then I created some key bindings for those functions. Here is that code on how I did that.</p>
 
-<p>``` elisp spotify.el
-(defun spotify-linux-command (command-name) "Execute command for Spotify" (interactive)
-  (setq command-text (format "%s%s" "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player." command-name))
+<p>``` scheme spotify.el
+(defun spotify-linux-command (command-name) &ldquo;Execute command for Spotify&rdquo; (interactive)
+  (setq command-text (format &ldquo;%s%s&rdquo; &ldquo;dbus-send &mdash;print-reply &mdash;dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.&rdquo; command-name))
   (shell-command command-text))</p>
 
-<p>(defun spotify-toggle () "Play/Pause Spotify" (interactive)
-  (spotify-linux-command "PlayPause"))</p>
+<p>(defun spotify-toggle () &ldquo;Play/Pause Spotify&rdquo; (interactive)
+  (spotify-linux-command &ldquo;PlayPause&rdquo;))</p>
 
-<p>(defun spotify-previous () "Starts the song over in Spotify" (interactive)
-  (spotify-linux-command "Previous"))</p>
+<p>(defun spotify-previous () &ldquo;Starts the song over in Spotify&rdquo; (interactive)
+  (spotify-linux-command &ldquo;Previous&rdquo;))</p>
 
-<p>(defun spotify-next () "Next song in Spotify" (interactive)
-  (spotify-linux-command "Next"))</p>
+<p>(defun spotify-next () &ldquo;Next song in Spotify&rdquo; (interactive)
+  (spotify-linux-command &ldquo;Next&rdquo;))</p>
 
-<p>(global-set-key (kbd "<f7>") 'spotify-previous)
-(global-set-key (kbd "<f8>") 'spotify-toggle)
-(global-set-key (kbd "<f9>") 'spotify-next)
+<p>(global-set-key (kbd &ldquo;<f7>&rdquo;) &lsquo;spotify-previous)
+(global-set-key (kbd &ldquo;<f8>&rdquo;) 'spotify-toggle)
+(global-set-key (kbd &ldquo;<f9>&rdquo;) 'spotify-next)
 ```</p>
+
+<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
 ]]></content>
   </entry>
   

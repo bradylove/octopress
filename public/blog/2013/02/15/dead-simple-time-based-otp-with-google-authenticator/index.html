@@ -119,12 +119,12 @@ $ touch totp.rb
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rotp&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;qrencoder&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">Base32</span><span class="o">.</span><span class="n">random_base32</span>
-</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+</span><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:Base32</span><span class="o">.</span><span class="n">random_base32</span>
+</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">qr_string</span> <span class="o">=</span> <span class="n">totp</span><span class="o">.</span><span class="n">provisioning_uri</span><span class="p">(</span><span class="s2">&quot;bradylove.com-love.brady@gmail.com&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="n">qr_code</span>   <span class="o">=</span> <span class="no">QREncoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">qr_string</span><span class="p">)</span>
-</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'><span class="kp">loop</span> <span class="k">do</span>
 </span><span class='line'>  <span class="nb">printf</span><span class="p">(</span><span class="s2">&quot;What is your most excelent OTP? &quot;</span><span class="p">)</span>
@@ -150,8 +150,8 @@ $ touch totp.rb
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">Base32</span><span class="o">.</span><span class="n">random_base32</span>
-</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:Base32</span><span class="o">.</span><span class="n">random_base32</span>
+</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -167,11 +167,11 @@ $ touch totp.rb
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">qr_code</span>   <span class="o">=</span> <span class="no">QREncoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">qr_string</span><span class="p">)</span>
-</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/- 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
+<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/&ndash; 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

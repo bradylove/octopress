@@ -4,7 +4,7 @@
   <title><![CDATA[Brady Love]]></title>
   <link href="http://bradylove.com/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-02-15T23:49:29-08:00</updated>
+  <updated>2013-05-09T21:25:44-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -12,6 +12,62 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Controlling Spotify From Within Emacs on Linux]]></title>
+    <link href="http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux/"/>
+    <updated>2013-05-09T20:13:00-07:00</updated>
+    <id>http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux</id>
+    <content type="html"><![CDATA[<p>A while back I switched from VIM to Emacs and I have been meaning to write some blog posts on some cool things I have been able to do within Emacs, so here is one on how I control spotify from within Emacs.</p>
+
+<h2>The Problem</h2>
+
+<p>So recently I built a new computer, I was debating between getting a <a href="https://www.system76.com/">System76</a> laptop, a new Apple MacBook Pro or building a desktop and running Linux on it. I ended up going for building a desktop and running Linux on it. Originally I started out with <a href="http://linuxmint.com/">Linux Mint 14</a>, then I switched to <a href="http://www.ubuntu.com">Ubuntu</a>, then I wanted something more powerful and switched to <a href="http://www.archlinux.org">ArchLinux</a>. A common problem I had across all three of these distributions was out of the box, I could not use the media keys on my keyboard to control <a href="http://www.spotify.com">Spotify</a>. They would work in with other media players such as <a href="http://projects.gnome.org/rhythmbox/">Rhythmbox</a> or <a href="http://audacious-media-player.org/">Audacious</a> but not Spotify.</p>
+
+<h2>The Solution</h2>
+
+<p>99% of the time that I am listening to music on this computer I have Emacs open, so I decided to fix this in Emacs rather than solving this problem through the system where a solution may not work from one desktop environment to the next.</p>
+
+<p>What I did to fix this problem was described an Elisp function to send a command to spotify via <code>dbus-send</code>, then created functions for toggling play/pause, previous, and next. Then I created some key bindings for those functions. Here is that code on how I did that.</p>
+
+<figure class='code'><figcaption><span>spotify.el</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">spotify-linux-command</span> <span class="p">(</span><span class="nf">command-name</span><span class="p">)</span> <span class="s">&quot;Execute command for Spotify&quot;</span> <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">setq</span> <span class="nv">command-text</span> <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;%s%s&quot;</span> <span class="s">&quot;dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.&quot;</span> <span class="nv">command-name</span><span class="p">))</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">shell-command</span> <span class="nv">command-text</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">spotify-toggle</span> <span class="p">()</span> <span class="s">&quot;Play/Pause Spotify&quot;</span> <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">spotify-linux-command</span> <span class="s">&quot;PlayPause&quot;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">spotify-previous</span> <span class="p">()</span> <span class="s">&quot;Starts the song over in Spotify&quot;</span> <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">spotify-linux-command</span> <span class="s">&quot;Previous&quot;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">spotify-next</span> <span class="p">()</span> <span class="s">&quot;Next song in Spotify&quot;</span> <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">spotify-linux-command</span> <span class="s">&quot;Next&quot;</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">global-set-key</span> <span class="p">(</span><span class="nf">kbd</span> <span class="s">&quot;&lt;f7&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;spotify-previous</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">global-set-key</span> <span class="p">(</span><span class="nf">kbd</span> <span class="s">&quot;&lt;f8&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;spotify-toggle</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">global-set-key</span> <span class="p">(</span><span class="nf">kbd</span> <span class="s">&quot;&lt;f9&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;spotify-next</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dead Simple Time Based OTP With Google Authenticator]]></title>
@@ -60,12 +116,12 @@ $ touch totp.rb
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rotp&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;qrencoder&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">Base32</span><span class="o">.</span><span class="n">random_base32</span>
-</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+</span><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:Base32</span><span class="o">.</span><span class="n">random_base32</span>
+</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">qr_string</span> <span class="o">=</span> <span class="n">totp</span><span class="o">.</span><span class="n">provisioning_uri</span><span class="p">(</span><span class="s2">&quot;bradylove.com-love.brady@gmail.com&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="n">qr_code</span>   <span class="o">=</span> <span class="no">QREncoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">qr_string</span><span class="p">)</span>
-</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'><span class="kp">loop</span> <span class="k">do</span>
 </span><span class='line'>  <span class="nb">printf</span><span class="p">(</span><span class="s2">&quot;What is your most excelent OTP? &quot;</span><span class="p">)</span>
@@ -91,8 +147,8 @@ $ touch totp.rb
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">Base32</span><span class="o">.</span><span class="n">random_base32</span>
-</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="no">ROTP</span><span class="o">::</span><span class="no">TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">random</span> <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:Base32</span><span class="o">.</span><span class="n">random_base32</span>
+</span><span class='line'><span class="n">totp</span>   <span class="o">=</span> <span class="ss">ROTP</span><span class="p">:</span><span class="ss">:TOTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">random</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -108,11 +164,11 @@ $ touch totp.rb
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">qr_code</span>   <span class="o">=</span> <span class="no">QREncoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">qr_string</span><span class="p">)</span>
-</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">qr_code</span><span class="o">.</span><span class="n">png</span><span class="p">(</span><span class="n">pixels_per_module</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="ss">margin</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;qr_code.png&quot;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/- 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
+<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/&ndash; 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -153,7 +209,7 @@ true
     <link href="http://bradylove.com/blog/2012/06/04/rounded-corners-with-ruby-motion/"/>
     <updated>2012-06-04T20:08:00-07:00</updated>
     <id>http://bradylove.com/blog/2012/06/04/rounded-corners-with-ruby-motion</id>
-    <content type="html"><![CDATA[<p>Another trick I learned with Objective-C/Ruby Motion is giving a view is rounded corners. When I first set out to learn how to do rounded corners with Ruby Motion, I quickly found a one liner calling layer.cornerRadius= on a view, which I thought was awesome! I remember thinking to myself &#8220;that was too easy but awesome!&#8221;. I soon found out I was right, it was too easy. So I set out again to find a better solution and found a similar question on stack overflow for someone trying to accomplish the same thing with Objective-C. I find myself using this alot now so I thought I would share it and hope it helps someone else as well. Before I get started with the details. I have already created a project with &#8220;motion create AppName&#8221;, created a window and initilized the RootViewController in my app_delegate.rb.
+    <content type="html"><![CDATA[<p>Another trick I learned with Objective-C/Ruby Motion is giving a view is rounded corners. When I first set out to learn how to do rounded corners with Ruby Motion, I quickly found a one liner calling layer.cornerRadius= on a view, which I thought was awesome! I remember thinking to myself &ldquo;that was too easy but awesome!&rdquo;. I soon found out I was right, it was too easy. So I set out again to find a better solution and found a similar question on stack overflow for someone trying to accomplish the same thing with Objective-C. I find myself using this alot now so I thought I would share it and hope it helps someone else as well. Before I get started with the details. I have already created a project with &ldquo;motion create AppName&rdquo;, created a window and initilized the RootViewController in my app_delegate.rb.
 And here is the starting code for the RootViewController which just has a single UIView, 200x200 in size, centered and colored green.</p>
 
 <figure class='code'><figcaption><span>root_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -187,7 +243,7 @@ And here is the starting code for the RootViewController which just has a single
 
 <h2>The Easy Way</h2>
 
-<p>Okay so real quick I thought I would show you the easy way and show you the problem I found with it. To quickly achieve this we just need to set the cornerRadius on the UIView&#8217;s layer. So after setting the backgroundColor for @rounded_rect I am going to add this line.</p>
+<p>Okay so real quick I thought I would show you the easy way and show you the problem I found with it. To quickly achieve this we just need to set the cornerRadius on the UIView&rsquo;s layer. So after setting the backgroundColor for @rounded_rect I am going to add this line.</p>
 
 <figure class='code'><figcaption><span>root_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">cornerRadius</span> <span class="o">=</span> <span class="mi">30</span><span class="o">.</span><span class="mi">0</span>
@@ -220,7 +276,7 @@ And here is the starting code for the RootViewController which just has a single
 <p>Our rounded corners are still there, however the parent views rounded corners do not clip the child view. To show this better I will set the backgroundColor of @non_rounded_subview to have a slight transparent to better show this.</p>
 
 <figure class='code'><figcaption><span>root_view_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@non_rounded_subview</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@non_rounded_subview</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">green</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">blue</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">alpha</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -245,8 +301,8 @@ And here is the starting code for the RootViewController which just has a single
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mask_path</span> <span class="o">=</span> <span class="no">UIBezierPath</span><span class="o">.</span><span class="n">bezierPathWithRoundedRect</span><span class="p">(</span><span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-</span><span class='line'>                                                   <span class="n">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerAllCorners</span><span class="p">,</span>
-</span><span class='line'>                                                   <span class="n">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">30</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>                                                   <span class="ss">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerAllCorners</span><span class="p">,</span>
+</span><span class='line'>                                                   <span class="ss">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">30</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
 </span><span class='line'><span class="n">mask_layer</span> <span class="o">=</span> <span class="no">CAShapeLayer</span><span class="o">.</span><span class="n">layer</span>
 </span><span class='line'><span class="n">mask_layer</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">bounds</span>
 </span><span class='line'><span class="n">mask_layer</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">mask_path</span><span class="o">.</span><span class="n">CGPath</span>
@@ -261,7 +317,7 @@ And here is the starting code for the RootViewController which just has a single
 <p>The cornerRadii for the UIBezierPath is where we set how much extreme we want our corners rounded. The first value of the CGSizeMake is a float for the width of your corner radius, the other being a float for the height of your corner radius. So you can change those values to something like</p>
 
 <figure class='code'><figcaption><span>root_view_controller</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">40</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">40</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -269,17 +325,17 @@ And here is the starting code for the RootViewController which just has a single
 
 <p><img src="http://content.screencast.com/users/BLove/folders/Jing/media/8a5a9051-4ff0-431f-8036-726f440d4d4c/00000010.png" alt="" /></p>
 
-<p>You also have more control in which corners actually get the rounding by editing the &#8220;byRoundingCorners&#8221; value. I currently have that set to UIRectCornerAllCorners. Which we can set to UIRectCornerAllCorners, UIRectCornerTopLeft, UIRectCornerTopRight, UIRectCornerBottomLeft, UIRectCornerBottomRight or any combonation of these seperated by a pipe ( | ). For example to round only the top left and bottom right corners I would change the following.</p>
+<p>You also have more control in which corners actually get the rounding by editing the &ldquo;byRoundingCorners&rdquo; value. I currently have that set to UIRectCornerAllCorners. Which we can set to UIRectCornerAllCorners, UIRectCornerTopLeft, UIRectCornerTopRight, UIRectCornerBottomLeft, UIRectCornerBottomRight or any combonation of these seperated by a pipe ( | ). For example to round only the top left and bottom right corners I would change the following.</p>
 
 <figure class='code'><figcaption><span>root_view_controlelr.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerAllCorners</span><span class="p">,</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerAllCorners</span><span class="p">,</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>to</p>
 
 <figure class='code'><figcaption><span>root_view_controlelr.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerTopLeft</span> <span class="o">|</span> <span class="no">UIRectCornerBottomRight</span><span class="p">,</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="ss">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerTopLeft</span> <span class="o">|</span> <span class="no">UIRectCornerBottomRight</span><span class="p">,</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -321,15 +377,15 @@ And here is the starting code for the RootViewController which just has a single
 </span><span class='line'>    <span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">greenColor</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">mask_path</span> <span class="o">=</span> <span class="no">UIBezierPath</span><span class="o">.</span><span class="n">bezierPathWithRoundedRect</span><span class="p">(</span><span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-</span><span class='line'>                                                       <span class="n">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerTopLeft</span> <span class="o">|</span> <span class="no">UIRectCornerBottomRight</span><span class="p">,</span>
-</span><span class='line'>                                                       <span class="n">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">40</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
+</span><span class='line'>                                                       <span class="ss">byRoundingCorners</span><span class="p">:</span> <span class="no">UIRectCornerTopLeft</span> <span class="o">|</span> <span class="no">UIRectCornerBottomRight</span><span class="p">,</span>
+</span><span class='line'>                                                       <span class="ss">cornerRadii</span><span class="p">:</span>       <span class="no">CGSizeMake</span><span class="p">(</span><span class="mi">40</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
 </span><span class='line'>    <span class="n">mask_layer</span> <span class="o">=</span> <span class="no">CAShapeLayer</span><span class="o">.</span><span class="n">layer</span>
 </span><span class='line'>    <span class="n">mask_layer</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">bounds</span>
 </span><span class='line'>    <span class="n">mask_layer</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">mask_path</span><span class="o">.</span><span class="n">CGPath</span>
 </span><span class='line'>    <span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask_layer</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="vi">@non_rounded_subview</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@non_rounded_subview</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@non_rounded_subview</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">colorWithRed</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">green</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">blue</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">alpha</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="vi">@rounded_rect</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@non_rounded_subview</span>
 </span><span class='line'>    <span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@rounded_rect</span>
@@ -370,7 +426,7 @@ And here is the starting code for the RootViewController which just has a single
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'><span class="ss">Motion</span><span class="p">:</span><span class="ss">:Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
 </span><span class='line'>  <span class="c1"># Use `rake config&#39; to see complete project settings.</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;EasyGradients&#39;</span>
 </span><span class='line'>  <span class="n">app</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;QuartzCore&quot;</span>
@@ -391,7 +447,7 @@ And here is the starting code for the RootViewController which just has a single
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AppDelegate</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="ss">didFinishLaunchingWithOptions</span><span class="p">:</span><span class="n">launchOptions</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
 </span><span class='line'>    <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="no">GradientViewController</span><span class="o">.</span><span class="n">new</span>
 </span><span class='line'>    <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span><span class="o">.</span><span class="n">wantsFullScreenLayout</span> <span class="o">=</span> <span class="kp">true</span>
@@ -474,7 +530,7 @@ And here is the starting code for the RootViewController which just has a single
 
 <h2>Better Rakefile</h2>
 
-<p>One of the things I did when creating my own Vim configuration was created a Rakefile in my ~/.vim directory that makes my setup more mobile. My current rakefile basically has a list of plugins that I want installed, then checks if a folder already exists with a name matching the plugins name, if it doesn&#8217;t then it will download the plugin via git. There is some functionality missing from this that I would like to have, and there is some repetition that bothers me. Before we begin, here is what my current rakefile looks like.</p>
+<p>One of the things I did when creating my own Vim configuration was created a Rakefile in my ~/.vim directory that makes my setup more mobile. My current rakefile basically has a list of plugins that I want installed, then checks if a folder already exists with a name matching the plugins name, if it doesn&rsquo;t then it will download the plugin via git. There is some functionality missing from this that I would like to have, and there is some repetition that bothers me. Before we begin, here is what my current rakefile looks like.</p>
 
 <figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -566,7 +622,7 @@ And here is the starting code for the RootViewController which just has a single
 <h3>Lets identify the problems I have with this.</h3>
 
 <ul>
-<li>&#8220;clone&#8221; is getting called over and over, wouldn&#8217;t it be better if we could just have an object of the git repos and their names, then grab them as needed?</li>
+<li>&ldquo;clone&rdquo; is getting called over and over, wouldn&rsquo;t it be better if we could just have an object of the git repos and their names, then grab them as needed?</li>
 <li>I cannot list installed plugins.</li>
 <li>I cannot update a single plugin, in order to update a plugin I have to remove the folder that the plugin is installing into, and run the rake command.</li>
 <li>I cannot easily remove a single plugin using the rake command</li>
@@ -608,7 +664,7 @@ And here is the starting code for the RootViewController which just has a single
 </span><span class='line'>  <span class="s2">&quot;Markdown&quot;</span>        <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-markdown.git&quot;</span><span class="p">,</span>
 </span><span class='line'>  <span class="s2">&quot;JSON&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/leshill/vim-json.git&quot;</span><span class="p">,</span>
 </span><span class='line'>  <span class="s2">&quot;HAML&quot;</span>            <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/tpope/vim-haml.git&quot;</span><span class="p">,</span>
-</span><span class='line'>  
+</span><span class='line'>
 </span><span class='line'>  <span class="c1"># Colors</span>
 </span><span class='line'>  <span class="s2">&quot;Solarized&quot;</span>      <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/altercation/vim-colors-solarized.git&quot;</span><span class="p">,</span>
 </span><span class='line'>  <span class="s2">&quot;Squil-Colors&quot;</span>    <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/squil/vim_colors.git&quot;</span><span class="p">,</span>
@@ -644,7 +700,7 @@ And here is the starting code for the RootViewController which just has a single
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This is a very simple method that just gets a list of of files/directories in the &#8220;bundle&#8221; directory. However when you use <code>Dir.foreach()</code> it also returns 2 unnecessary entries, &#8220;.&#8221; and &#8220;..&#8221;. Luckily they are at the top of the list so we easily get rid of them with <code>.drop(2)</code>. We now have our list so lets put it to use and create our rake task.</p>
+<p>This is a very simple method that just gets a list of of files/directories in the &ldquo;bundle&rdquo; directory. However when you use <code>Dir.foreach()</code> it also returns 2 unnecessary entries, &ldquo;.&rdquo; and &ldquo;..&rdquo;. Luckily they are at the top of the list so we easily get rid of them with <code>.drop(2)</code>. We now have our list so lets put it to use and create our rake task.</p>
 
 <figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -705,7 +761,7 @@ And here is the starting code for the RootViewController which just has a single
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Once we have verified that the plugin exists in our hash and locally in the &#8220;bundle&#8221; directory we can remove it.</p>
+<p>Once we have verified that the plugin exists in our hash and locally in the &ldquo;bundle&rdquo; directory we can remove it.</p>
 
 <figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -743,7 +799,7 @@ And here is the starting code for the RootViewController which just has a single
 
 <p>Finally we need to create the rake task to put all this code to use!</p>
 
-<figure class='code'><figcaption><span>rakefile </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:update</span><span class="p">,</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">|</span>
@@ -756,7 +812,7 @@ And here is the starting code for the RootViewController which just has a single
 
 <h3>Last but not least</h3>
 
-<p>The last item on my wish list is to be able to be able to remove a plugin by running <code>rake destroy[pluginName]</code>. Luckily by trying to make our methods as reusable as possible we already developed the &#8220;delete_plugin&#8221; method and just need to add the rake task.</p>
+<p>The last item on my wish list is to be able to be able to remove a plugin by running <code>rake destroy[pluginName]</code>. Luckily by trying to make our methods as reusable as possible we already developed the &ldquo;delete_plugin&rdquo; method and just need to add the rake task.</p>
 
 <figure class='code'><figcaption><span>rakefile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -970,7 +1026,7 @@ And here is the starting code for the RootViewController which just has a single
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>There is a lot you can do with a rake file to help make your Vim setup easier to add and remove to. You don&#8217;t have to limit rake files to your Ruby apps or Vim setups either, there are many problems where a nice rake file is a viable solution.</p>
+<p>There is a lot you can do with a rake file to help make your Vim setup easier to add and remove to. You don&rsquo;t have to limit rake files to your Ruby apps or Vim setups either, there are many problems where a nice rake file is a viable solution.</p>
 ]]></content>
   </entry>
   

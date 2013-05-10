@@ -17,7 +17,7 @@ So recently I built a new computer, I was debating between getting a [System76](
 
 What I did to fix this problem was described an Elisp function to send a command to spotify via `dbus-send`, then created functions for toggling play/pause, previous, and next. Then I created some key bindings for those functions. Here is that code on how I did that.
 
-``` elisp spotify.el
+``` scheme spotify.el
 (defun spotify-linux-command (command-name) "Execute command for Spotify" (interactive)
   (setq command-text (format "%s%s" "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player." command-name))
   (shell-command command-text))
@@ -35,3 +35,5 @@ What I did to fix this problem was described an Elisp function to send a command
 (global-set-key (kbd "<f8>") 'spotify-toggle)
 (global-set-key (kbd "<f9>") 'spotify-next)
 ```
+
+Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine with Spotify there, however if your interested on how I did that please checkout `spotify.el` in my  [.emacs.d repository](https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el). Enjoy.

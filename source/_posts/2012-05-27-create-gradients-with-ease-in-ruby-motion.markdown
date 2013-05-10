@@ -48,7 +48,7 @@ Then create the file for our GradientViewController.
 touch app/gradient_view_controller.rb
 ```
 
-Open up the gradient_view_controller.rb. This is were we are going to work our gradient magic. 
+Open up the gradient_view_controller.rb. This is were we are going to work our gradient magic.
 
 ```ruby app/gradient_view_controller.rb
 class GradientViewController < UIViewController
@@ -68,7 +68,7 @@ Then back in your console you can go ahead and run the `rake` command to launch 
 
 You may notice that gradient.colors just accepts an array so we can easily add more colors to the array.
 ```ruby app/gradient_view_controller.rb
-gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor, 
+gradient.colors = [UIColor.blackColor.CGColor, UIColor.redColor.CGColor,
                    UIColor.whiteColor.CGColor, UIColor.blueColor.CGColor]
 ```
 And you will end up with this
@@ -79,7 +79,7 @@ For more control over the locations of the gradients you can add an array to gra
 ```ruby app/gradient_view_controller.rb
 gradient.locations = [0.1, 0.2, 0.8, 0.9]
 ```
-Which will end up someting like this 
+Which will end up someting like this
 
 ![](https://img.skitch.com/20120527-p3si97dy86x9bskaxsad8eea8s.jpg)
 

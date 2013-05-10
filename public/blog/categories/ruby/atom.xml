@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-05-09T20:45:00-07:00</updated>
+  <updated>2013-05-09T21:25:44-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -104,7 +104,7 @@ qr_code.png(pixels_per_module: 4, margin: 1).save("qr_code.png")
 
 <p>```</p>
 
-<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/- 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
+<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/&ndash; 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
 
 <p>``` ruby</p>
 
@@ -142,7 +142,7 @@ true
     <link href="http://bradylove.com/blog/2012/06/04/rounded-corners-with-ruby-motion/"/>
     <updated>2012-06-04T20:08:00-07:00</updated>
     <id>http://bradylove.com/blog/2012/06/04/rounded-corners-with-ruby-motion</id>
-    <content type="html"><![CDATA[<p>Another trick I learned with Objective-C/Ruby Motion is giving a view is rounded corners. When I first set out to learn how to do rounded corners with Ruby Motion, I quickly found a one liner calling layer.cornerRadius= on a view, which I thought was awesome! I remember thinking to myself "that was too easy but awesome!". I soon found out I was right, it was too easy. So I set out again to find a better solution and found a similar question on stack overflow for someone trying to accomplish the same thing with Objective-C. I find myself using this alot now so I thought I would share it and hope it helps someone else as well. Before I get started with the details. I have already created a project with "motion create AppName", created a window and initilized the RootViewController in my app_delegate.rb.
+    <content type="html"><![CDATA[<p>Another trick I learned with Objective-C/Ruby Motion is giving a view is rounded corners. When I first set out to learn how to do rounded corners with Ruby Motion, I quickly found a one liner calling layer.cornerRadius= on a view, which I thought was awesome! I remember thinking to myself &ldquo;that was too easy but awesome!&rdquo;. I soon found out I was right, it was too easy. So I set out again to find a better solution and found a similar question on stack overflow for someone trying to accomplish the same thing with Objective-C. I find myself using this alot now so I thought I would share it and hope it helps someone else as well. Before I get started with the details. I have already created a project with &ldquo;motion create AppName&rdquo;, created a window and initilized the RootViewController in my app_delegate.rb.
 And here is the starting code for the RootViewController which just has a single UIView, 200x200 in size, centered and colored green.</p>
 
 <p>``` ruby root_view_controller.rb
@@ -167,7 +167,7 @@ So you should have something that looks like this.</p>
 
 <h2>The Easy Way</h2>
 
-<p>Okay so real quick I thought I would show you the easy way and show you the problem I found with it. To quickly achieve this we just need to set the cornerRadius on the UIView's layer. So after setting the backgroundColor for @rounded_rect I am going to add this line.</p>
+<p>Okay so real quick I thought I would show you the easy way and show you the problem I found with it. To quickly achieve this we just need to set the cornerRadius on the UIView&rsquo;s layer. So after setting the backgroundColor for @rounded_rect I am going to add this line.</p>
 
 <p><code>ruby root_view_controller.rb
 @rounded_rect.layer.cornerRadius = 30.0
@@ -237,7 +237,7 @@ cornerRadii:       CGSizeMake(40.0, 150.0))
 
 <p><img src="http://content.screencast.com/users/BLove/folders/Jing/media/8a5a9051-4ff0-431f-8036-726f440d4d4c/00000010.png" alt="" /></p>
 
-<p>You also have more control in which corners actually get the rounding by editing the "byRoundingCorners" value. I currently have that set to UIRectCornerAllCorners. Which we can set to UIRectCornerAllCorners, UIRectCornerTopLeft, UIRectCornerTopRight, UIRectCornerBottomLeft, UIRectCornerBottomRight or any combonation of these seperated by a pipe ( | ). For example to round only the top left and bottom right corners I would change the following.</p>
+<p>You also have more control in which corners actually get the rounding by editing the &ldquo;byRoundingCorners&rdquo; value. I currently have that set to UIRectCornerAllCorners. Which we can set to UIRectCornerAllCorners, UIRectCornerTopLeft, UIRectCornerTopRight, UIRectCornerBottomLeft, UIRectCornerBottomRight or any combonation of these seperated by a pipe ( | ). For example to round only the top left and bottom right corners I would change the following.</p>
 
 <p><code>ruby root_view_controlelr.rb
 byRoundingCorners: UIRectCornerAllCorners,
@@ -302,13 +302,13 @@ cd GradientExample
 <p>Then open up the Rakefile created by the generator and add the QuartzCore framework.</p>
 
 <p>```ruby Rakefile
-$:.unshift("/Library/RubyMotion/lib")
-require 'motion/project'</p>
+$:.unshift(&ldquo;/Library/RubyMotion/lib&rdquo;)
+require &lsquo;motion/project&rsquo;</p>
 
 <p>Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'EasyGradients'
-  app.frameworks &lt;&lt; "QuartzCore"
+  app.name = &lsquo;EasyGradients&rsquo;
+  app.frameworks &lt;&lt; &ldquo;QuartzCore&rdquo;
 end
 ```</p>
 

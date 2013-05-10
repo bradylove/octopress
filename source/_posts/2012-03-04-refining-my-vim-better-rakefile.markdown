@@ -3,7 +3,7 @@ layout: post
 title: "Refining My Vim: Better Rakefile"
 date: 2012-03-04 18:30
 comments: true
-categories: vim 
+categories: vim
 ---
 So tonight I am taking a closer look at my [Vim config](https://github.com/vim-files) to see what I can change to help make my vim experience better. A few months ago I got away from using pre-configured setups of Vim (such as [janus](https://github.com/carlhuda/janus)) and setup my own Vim config from scratch. I figured this would make a good blog series focusing on one thing at a time, so here we go.
 
@@ -55,7 +55,7 @@ def clone(url, name)
 end
 ```
 
-### Lets identify the problems I have with this. 
+### Lets identify the problems I have with this.
 * "clone" is getting called over and over, wouldn't it be better if we could just have an object of the git repos and their names, then grab them as needed?
 * I cannot list installed plugins.
 * I cannot update a single plugin, in order to update a plugin I have to remove the folder that the plugin is installing into, and run the rake command.
@@ -66,9 +66,9 @@ Lets start at the top and see what we can do to refactor this code to remove the
 
 ``` ruby rakefile
 def plugins
-  { "NERDTree"		=> "https://github.com/scrooloose/nerdtree.git", 
-	"NERD-Commenter"  => "https://github.com/vim-scripts/The-NERD-Commenter.git", 
-	"L9"			  => "https://github.com/vim-scripts/L9.git", 
+  { "NERDTree"		=> "https://github.com/scrooloose/nerdtree.git",
+	"NERD-Commenter"  => "https://github.com/vim-scripts/The-NERD-Commenter.git",
+	"L9"			  => "https://github.com/vim-scripts/L9.git",
 	"Ack"			 => "https://github.com/mileszs/ack.vim.git",
 	"Rails"		   => "https://github.com/tpope/vim-rails.git",
 	"Ruby"			=> "https://github.com/vim-ruby/vim-ruby.git",
@@ -77,7 +77,7 @@ def plugins
 	"Markdown"		=> "https://github.com/tpope/vim-markdown.git",
 	"JSON"			=> "https://github.com/leshill/vim-json.git",
 	"HAML"			=> "https://github.com/tpope/vim-haml.git",
-	
+
 	# Colors
 	"Solarized"	   => "https://github.com/altercation/vim-colors-solarized.git",
 	"Squil-Colors"	=> "https://github.com/squil/vim_colors.git",
@@ -93,7 +93,7 @@ task :default do
   plugins.each_pair { |key, value| clone key, value}
 end
 ```
-To me this is much more pleasing for a couple reasons, one reason being I am not repeatedly calling having to type clone, can just add the name and url of the plugin to the hash. Secondly and more importantly is the fact that the plugins method is reusable to fix my other issues. 
+To me this is much more pleasing for a couple reasons, one reason being I am not repeatedly calling having to type clone, can just add the name and url of the plugin to the hash. Secondly and more importantly is the fact that the plugins method is reusable to fix my other issues.
 
 ### One down three to go
 So another feature I want in my rakefile is the ability to call ```rake list``` and getting a list of installed plugins. This is really easy to do, we are going to create 2 methods, the rake task and then a method to get a list of installed apps. First we will make the method that gets the list for us.
@@ -167,8 +167,8 @@ end
 
 Finally we need to create the rake task to put all this code to use!
 
-``` ruby rakefile 
-task :update, [:name] do |t, args| 
+``` ruby rakefile
+task :update, [:name] do |t, args|
   update(args.name)
 end
 ```
@@ -198,7 +198,7 @@ task :list do
   installed_plugins.each { |plugin| puts plugin }
 end
 
-task :update, [:name] do |t, args| 
+task :update, [:name] do |t, args|
   update(args.name)
 end
 
@@ -207,10 +207,10 @@ task :destroy, [:name] do |t, args|
 end
 
 def plugins
-  { 
-    "NERDTree"        => "https://github.com/scrooloose/nerdtree.git", 
-    "NERD-Commenter"  => "https://github.com/vim-scripts/The-NERD-Commenter.git", 
-    "L9"              => "https://github.com/vim-scripts/L9.git", 
+  {
+    "NERDTree"        => "https://github.com/scrooloose/nerdtree.git",
+    "NERD-Commenter"  => "https://github.com/vim-scripts/The-NERD-Commenter.git",
+    "L9"              => "https://github.com/vim-scripts/L9.git",
     "Ack"             => "https://github.com/mileszs/ack.vim.git",
     "Rails"           => "https://github.com/tpope/vim-rails.git",
     "Ruby"            => "https://github.com/vim-ruby/vim-ruby.git",
@@ -232,7 +232,7 @@ def plugins
     "Javascript"      => "https://github.com/pangloss/vim-javascript.git",
     "Eruby"           => "https://github.com/vim-scripts/eruby.vim.git",
     "Less"            => "https://github.com/groenewege/vim-less.git",
-    
+
     # Colors
     "Solarized"       => "https://github.com/altercation/vim-colors-solarized.git",
     "Squil-Colors"    => "https://github.com/squil/vim_colors.git",

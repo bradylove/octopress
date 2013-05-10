@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Authenticator | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/authenticator/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-05-09T20:45:00-07:00</updated>
+  <updated>2013-05-09T21:25:44-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -104,7 +104,7 @@ qr_code.png(pixels_per_module: 4, margin: 1).save("qr_code.png")
 
 <p>```</p>
 
-<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/- 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
+<p>Finally to test the lines of code above we create an endless loop that will ask for the OTP from the user in the terminal and verify the given OTP. Where we verify the OTP we are calling <code>verify_with_drift</code> this will check the OTP based on Time.now +/&ndash; 5 seconds. This will make up for any timing issues between your computer and your phone.</p>
 
 <p>``` ruby</p>
 
