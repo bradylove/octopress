@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Spotify | Brady Love]]></title>
+  <link href="http://bradylove.com/blog/categories/spotify/atom.xml" rel="self"/>
+  <link href="http://bradylove.com/"/>
+  <updated>2013-05-09T20:45:00-07:00</updated>
+  <id>http://bradylove.com/</id>
+  <author>
+    <name><![CDATA[Brady Love]]></name>
+    <email><![CDATA[love.brady@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Controlling Spotify From Within Emacs on Linux]]></title>
+    <link href="http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux/"/>
+    <updated>2013-05-09T20:13:00-07:00</updated>
+    <id>http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux</id>
+    <content type="html"><![CDATA[<p>A while back I switched from VIM to Emacs and I have been meaning to write some blog posts on some cool things I have been able to do within Emacs, so here is one on how I control spotify from within Emacs.</p>
+
+<h2>The Problem</h2>
+
+<p>So recently I built a new computer, I was debating between getting a <a href="https://www.system76.com/">System76</a> laptop, a new Apple MacBook Pro or building a desktop and running Linux on it. I ended up going for building a desktop and running Linux on it. Originally I started out with <a href="http://linuxmint.com/">Linux Mint 14</a>, then I switched to <a href="http://www.ubuntu.com">Ubuntu</a>, then I wanted something more powerful and switched to <a href="http://www.archlinux.org">ArchLinux</a>. A common problem I had across all three of these distributions was out of the box, I could not use the media keys on my keyboard to control <a href="http://www.spotify.com">Spotify</a>. They would work in with other media players such as <a href="http://projects.gnome.org/rhythmbox/">Rhythmbox</a> or <a href="http://audacious-media-player.org/">Audacious</a> but not Spotify.</p>
+
+<h2>The Solution</h2>
+
+<p>99% of the time that I am listening to music on this computer I have Emacs open, so I decided to fix this in Emacs rather than solving this problem through the system where a solution may not work from one desktop environment to the next.</p>
+
+<p>What I did to fix this problem was described an Elisp function to send a command to spotify via <code>dbus-send</code>, then created functions for toggling play/pause, previous, and next. Then I created some key bindings for those functions. Here is that code on how I did that.</p>
+
+<p>``` elisp spotify.el
+(defun spotify-linux-command (command-name) "Execute command for Spotify" (interactive)
+  (setq command-text (format "%s%s" "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player." command-name))
+  (shell-command command-text))</p>
+
+<p>(defun spotify-toggle () "Play/Pause Spotify" (interactive)
+  (spotify-linux-command "PlayPause"))</p>
+
+<p>(defun spotify-previous () "Starts the song over in Spotify" (interactive)
+  (spotify-linux-command "Previous"))</p>
+
+<p>(defun spotify-next () "Next song in Spotify" (interactive)
+  (spotify-linux-command "Next"))</p>
+
+<p>(global-set-key (kbd "<f7>") 'spotify-previous)
+(global-set-key (kbd "<f8>") 'spotify-toggle)
+(global-set-key (kbd "<f9>") 'spotify-next)
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
