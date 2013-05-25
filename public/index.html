@@ -7,7 +7,7 @@
     <meta name="author" content="Brady Love">
 
     
-    <meta name="description" content="Controlling Spotify From Within Emacs on Linux A while back I switched from VIM to Emacs and I have been meaning to write some blog posts on some &hellip;">
+    <meta name="description" content="Commanding Tmux With Emacs A few days ago I was pair programming with my good friend Evan. Evan is a Vim user, so naturally as an Emacs lover I am &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -79,6 +79,170 @@
 
 
     <article class="post">
+    <h1 class="title"><a href="/blog/2013/05/24/commanding-tmux-with-emacs/">Commanding Tmux With Emacs</a></h1>
+    <div class="entry">
+        <p>A few days ago I was pair programming with my good friend <a href="http://evansparkman.com/">Evan</a>. Evan is a <a href="http://www.vim.org/">Vim</a> user, so naturally as an <a href="https://www.gnu.org/software/emacs/">Emacs</a> lover I am always giving him crap about his precious Vim. However while we were pairing he showed me an awesome tool he had under his belt with Vim. Evan was using the power of <a href="https://github.com/benmills/vimux.git">Vimux</a> and <a href="https://github.com/kikijump/tslime.vim">tslime</a> to send commands to his Tmux session from within Vim. I was instantly jeleous and the next day I began to investigate. As it turns out Tmux makes it super simple to sand a command to any pane from any terminal. Here is what I discovered.</p>
+
+<h2>The Details On Tmux</h2>
+
+<p>Tmux comes with the <code>send-keys</code> command that you can send along with passing in the session name, window name and pane number and the keys that you would like to send to the specified pane. Try it out, start up a new Tmux session, you can do this by giving the session a name or allowing Tmux to assign the session a number. To startup a new Tmux session with a name you can run the following.</p>
+
+<pre><code>$ tmux new -s sample-session
+</code></pre>
+
+<p>Or to have Tmux assign a session number you can send <code>tmux new</code> without the <code>-s sample-session</code> argument. Then you can run <code>tmux ls</code> or <code>tmux list-sessions</code> to get a list of running Tmux sessions so that you can get the session number which is 0 in the following example.</p>
+
+<pre><code>$ tmux new
+$ tmux ls
+0: 1 windows (created Fri May 24 20:43:18 2013) [105x129] (attached)
+</code></pre>
+
+<p>Now that you have your Tmux session running, go ahead and open up another terminal. From this new terminal we will send the <code>tmux send-keys</code> command, passing in the <code>-t</code> argument with the <code>session-name:window-name.pane-number</code> followed by the keys we want to send to the Tmux pane, <code>window-name</code> can also be replaced by the windows number. Here are some examples of what this would look like.</p>
+
+<pre><code># Executes 'ls' on pane 1 of window 1 of sample-session
+$ tmux send-keys -t sample-session:1.1 "ls" Enter
+
+# Executes 'bundle exec rake routes' on pane 2 of window 3 of session 0
+$ tmux send-keys -t 0:3.2
+</code></pre>
+
+<h2>Lets Add Some Emacs</h2>
+
+<p>Now that we know how to send a command to a Tmux session from another terminal its pretty easy to make this happen from Emacs. Emacs provides a function named <code>shell-command</code> that will execute any shell command you pass it. If you have read my blog post <a href="http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux/">Controlling Spotify From Within Emacs on Linux</a>, you may recognize this. Here is an example of how I used this command to run Cucumber in my terminal from within Emacs.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-exec-cucumber</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Execute cucumber in tmux pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">shell-command</span> <span class="s">&quot;tmux send-keys -t 0:1.1 &#39;bundle exec cucumber&#39; Enter&quot;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once this this function has been evaluated you can run it by pressing <code>M-x</code> then typing in the function name <code>tmux-exec-cucumber</code> and pressing enter. When you do it will kick off Cucumber in pane 1 of window 1 of session 0.</p>
+
+<p>This is cool, howerver pretty impractical considering every time we want to send the command to a different pane we will have to edit this file, and if we add more commands, that adds more editing for different panes&hellip; What a major pain in the ass. So lets go ahead and define some variables with some defaults for the sesssion-name, window-name and pane number, then we will define a function to set these variables without having to edit any
+files.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-session-name</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-window-name</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-pane-number</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-setup</span> <span class="p">(</span><span class="nf">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Setup global variables for tmux session, window, and pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span> <span class="s">&quot;sEnter tmux session name: \nsEnter tmux window name: \nsEnter tmux pane number: &quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-session-name</span> <span class="nv">x</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-window-name</span> <span class="nv">y</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">setq</span> <span class="nv">tmux-pane-number</span> <span class="nv">z</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">message</span> <span class="s">&quot;Tmux Setup, session name: %s, window name: %s, pane number: %s&quot;</span> <span class="nv">tmux-session-name</span> <span class="nv">tmux-window-name</span> <span class="nv">tmux-pane-number</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we run this new function with <code>M-x tmux-setup</code>, it will ask us what Tmux session, window and pane we want to send our commands too, then assigns our input to the variables that we setup. Next we need to modify our <code>tmux-exec-cucumber</code> function to use these new variables. We can do that by modifying it to look like this</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-exec-cucumber</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Execute cucumber in tmux pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">shell-command</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;tmux send-keys -t %s:%s.%s &#39;bundle exec cucumber&#39; Enter&quot;</span> <span class="nv">tmux-session-name</span> <span class="nv">tmux-window-name</span> <span class="nv">tmux-pane-number</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With these changes in place when we run <code>M-x tmux-exec-cucumber</code> it will send <code>bundle exec cucumber</code> to the pane we specified when we ran <code>M-x tmux-setup</code>.</p>
+
+<p>Now this is a bit better, however the function isn&rsquo;t very reusable so lets go ahead and change the <code>tmux-exec-cucumber</code> function to just <code>tmux-exec</code> and accept the command as a parameter and pass that command instead of <code>bundle exec cucumber</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-exec</span> <span class="p">(</span><span class="nf">command</span><span class="p">)</span>
+</span><span class='line'>  <span class="s">&quot;Execute command in tmux pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">shell-command</span>
+</span><span class='line'>    <span class="p">(</span><span class="nf">format</span> <span class="s">&quot;tmux send-keys -t %s:%s.%s &#39;%s&#39; Enter&quot;</span> <span class="nv">tmux-session-name</span> <span class="nv">tmux-window-name</span> <span class="nv">tmux-pane-number</span> <span class="nv">command</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we will define a new function for executing the cucumber command.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-exec-cucumber</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Execute &#39;bundle exec cucumber&#39; in tmux pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">tmux-exec</span> <span class="s">&quot;bundle exec cucumber&quot;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And there you have it, <code>M-x tmux-exec-cucumber</code> will kick off cucumber in your Tmux pane still, but this function is a little easier to duplicate for adding extra commands, such as <code>tmux-rake-routes</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scheme'><span class='line'><span class="p">(</span><span class="nf">defun</span> <span class="nv">tmux-exec-rake-routes</span> <span class="p">()</span>
+</span><span class='line'>  <span class="s">&quot;Execute &#39;bundle exec rake routes&#39; in tmux pane&quot;</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">interactive</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">(</span><span class="nf">tmux-exec</span> <span class="s">&quot;bundle exec rake rouets&quot;</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I plan on doing some more exploration around Tmux and Emacs to see what other cool tricks I can find and to see how I can expand on this subject. Until then you can checkout my <code>tmux.el</code> file I have on my <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/tmux.el">.emacs.d Github repo</a>. Enjoy :)</p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-24T21:12:00-07:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/emacs/'>Emacs</a>, <a class='category' href='/blog/categories/tmux/'>Tmux</a>
+  
+</div>
+
+</div>
+        
+    </div>
+</article>
+
+
+    <article class="post">
     <h1 class="title"><a href="/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux/">Controlling Spotify From Within Emacs on Linux</a></h1>
     <div class="entry">
         <p>A while back I switched from VIM to Emacs and I have been meaning to write some blog posts on some cool things I have been able to do within Emacs, so here is one on how I control spotify from within Emacs.</p>
@@ -128,7 +292,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
+<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine with Spotify there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
 
         
         

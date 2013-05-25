@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Brady Love]]></title>
   <link href="http://bradylove.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://bradylove.com/"/>
-  <updated>2013-05-09T21:25:44-07:00</updated>
+  <updated>2013-05-24T22:14:02-07:00</updated>
   <id>http://bradylove.com/</id>
   <author>
     <name><![CDATA[Brady Love]]></name>
@@ -49,7 +49,7 @@
 (global-set-key (kbd &ldquo;<f9>&rdquo;) 'spotify-next)
 ```</p>
 
-<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
+<p>Thats all it takes, I am getting closer and closer to never having to leave Emacs. At work I still use OS X so I also made this work when under OS X, however its not a big deal in that situation since the media keys work fine with Spotify there, however if your interested on how I did that please checkout <code>spotify.el</code> in my  <a href="https://github.com/bradylove/.emacs.d/blob/master/init.d/spotify.el">.emacs.d repository</a>. Enjoy.</p>
 ]]></content>
   </entry>
   

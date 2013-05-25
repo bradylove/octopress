@@ -26,14 +26,18 @@
         <loc>
             http://bradylove.com/blog/2013/05/09/controlling-spotify-from-within-emacs-on-linux/
         </loc>
-        <lastmod>2013-05-09T21:23:39-07:00</lastmod>
+        <lastmod>2013-05-09T21:25:58-07:00</lastmod>
+    </url>
+    <url>
+        <loc>http://bradylove.com/blog/2013/05/24/commanding-tmux-with-emacs/</loc>
+        <lastmod>2013-05-24T22:11:24-07:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/blog/archives/</loc>
-        <lastmod>2013-05-09T21:23:39-07:00</lastmod>
+        <lastmod>2013-05-24T22:11:24-07:00</lastmod>
     </url>
     <url>
         <loc>http://bradylove.com/</loc>
-        <lastmod>2013-05-09T21:23:39-07:00</lastmod>
+        <lastmod>2013-05-24T22:11:24-07:00</lastmod>
     </url>
 </urlset>
